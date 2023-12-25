@@ -4,6 +4,9 @@ import { Pressable, View, StyleSheet } from "react-native";
 import Text from "./Text";
 import theme from "./theme";
 import validationSchema from "./yupValidationSchema";
+import { useMutation } from "@apollo/client";
+import { LOGIN } from "../../graphql/queryLogin";
+import { useState } from "react";
 
 const styles = StyleSheet.create({
   submitButton: {
@@ -19,11 +22,27 @@ const styles = StyleSheet.create({
 });
 
 const SignIn = () => {
+  const [mutate, { data }] = useMutation(LOGIN);
+
   return (
     <Formik
       validationSchema={validationSchema}
       initialValues={{ username: "", password: "" }}
-      onSubmit={(values) => console.log(values)}
+      onSubmit={async (values) => {
+        try {
+          const mutationResponse = await mutate({
+            variables: {
+              credentials: {
+                username: values.username,
+                password: values.password,
+              },
+            },
+          });
+          console.log(mutationResponse);
+        } catch (e) {
+          console.log(e);
+        }
+      }}
     >
       {({ handleSubmit }) => (
         <View>
