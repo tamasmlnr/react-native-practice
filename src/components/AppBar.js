@@ -2,6 +2,8 @@ import { View, StyleSheet, Pressable, Text, ScrollView } from "react-native";
 import Constants from "expo-constants";
 import theme from "./theme";
 import { Link } from "react-router-native";
+import useAuthStorage from "../../hooks/useAuthStorage";
+import { useState, useEffect } from "react";
 
 const styles = StyleSheet.create({
   container: {
@@ -21,14 +23,34 @@ const styles = StyleSheet.create({
 });
 
 const AppBar = () => {
+  const authStorage = useAuthStorage();
+  const [authKey, setAuthKey] = useState(undefined);
+  const isUserSignedIn = !!authKey;
+
+  useEffect(() => {
+    (async () => {
+      const key = await authStorage.getAccessToken();
+      setAuthKey(key);
+    })();
+  }, [authKey]);
+
   return (
     <View style={styles.container}>
       <ScrollView horizontal>
-        <Pressable>
+        {!isUserSignedIn ? (
           <Link to="/login">
-            <Text style={styles.tabText}>Login</Text>
+            <Text style={styles.tabText}>Sign in</Text>
           </Link>
-        </Pressable>
+        ) : (
+          <Pressable
+            onPress={async () => {
+              await authStorage.removeAccessToken();
+              setAuthKey(undefined);
+            }}
+          >
+            <Text style={styles.tabText}>Sign out</Text>
+          </Pressable>
+        )}
         <Pressable>
           <Link to="/">
             <Text style={styles.tabText}>Repositories</Text>
