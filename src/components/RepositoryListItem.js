@@ -12,8 +12,10 @@ import { useQuery } from "@apollo/client";
 import { GET_REPOSITORY } from "../../graphql/getRepository";
 import { buttonStyles } from "./SignIn";
 import * as Linking from "expo-linking";
+import { ReviewItem } from "./ReviewItem";
+import { FlatList } from "react-native-web";
 
-const styles = StyleSheet.create({
+export const styles = StyleSheet.create({
   container: {
     display: "flex",
     flexDirection: "row",
@@ -50,7 +52,7 @@ const styles = StyleSheet.create({
 export const RepositoryListItem = (props) => {
   const { id } = useParams();
   const { listItem, singleView } = props;
-  const { data: repository } = useQuery(GET_REPOSITORY, {
+  const { data: repository, loading } = useQuery(GET_REPOSITORY, {
     skip: !singleView,
     variables: {
       repositoryId: id,
@@ -58,7 +60,7 @@ export const RepositoryListItem = (props) => {
   });
   const navigate = useNavigate();
   const displayedItem = singleView ? repository?.repository : listItem;
-
+  console.log(displayedItem);
   return (
     <Pressable
       onPress={() => {
@@ -146,12 +148,14 @@ export const RepositoryListItem = (props) => {
       </View>
 
       {singleView && (
-        <Pressable
-          style={buttonStyles.submitButton}
-          onPress={() => Linking.openURL(displayedItem.url)}
-        >
-          <Text style={{ color: theme.colors.white }}>Open in GitHub</Text>
-        </Pressable>
+        <>
+          <Pressable
+            style={buttonStyles.submitButton}
+            onPress={() => Linking.openURL(displayedItem.url)}
+          >
+            <Text style={{ color: theme.colors.white }}>Open in GitHub</Text>
+          </Pressable>
+        </>
       )}
     </Pressable>
   );
