@@ -4,9 +4,10 @@ import { Pressable, View, StyleSheet } from "react-native";
 import Text from "./Text";
 import theme from "./theme";
 import validationSchema from "./yupValidationSchema";
-import { useMutation } from "@apollo/client";
+import { ApolloClient, useMutation } from "@apollo/client";
 import { LOGIN } from "../../graphql/queryLogin";
-import { useState } from "react";
+import useAuthStorage from "../../hooks/useAuthStorage";
+import { useNavigate } from "react-router-native";
 
 const styles = StyleSheet.create({
   submitButton: {
@@ -23,7 +24,8 @@ const styles = StyleSheet.create({
 
 const SignIn = () => {
   const [mutate, { data }] = useMutation(LOGIN);
-
+  const authStorage = useAuthStorage();
+  const navigate = useNavigate();
   return (
     <Formik
       validationSchema={validationSchema}
@@ -38,7 +40,11 @@ const SignIn = () => {
               },
             },
           });
-          console.log(mutationResponse);
+          await authStorage.removeAccessToken();
+          await authStorage.setAccessToken(
+            mutationResponse.data.authenticate.accessToken
+          );
+          navigate("/");
         } catch (e) {
           console.log(e);
         }
