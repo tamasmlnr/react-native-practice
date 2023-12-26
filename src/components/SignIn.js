@@ -9,7 +9,7 @@ import { LOGIN } from "../../graphql/queryLogin";
 import useAuthStorage from "../../hooks/useAuthStorage";
 import { useNavigate } from "react-router-native";
 
-const styles = StyleSheet.create({
+export const buttonStyles = StyleSheet.create({
   submitButton: {
     height: 50,
     margin: 20,
@@ -58,7 +58,7 @@ const SignIn = () => {
             placeholder="Password"
             secureTextEntry
           />
-          <Pressable onPress={handleSubmit} style={styles.submitButton}>
+          <Pressable onPress={handleSubmit} style={buttonStyles.submitButton}>
             <Text
               style={{
                 color: theme.colors.white,
