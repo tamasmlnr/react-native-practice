@@ -4,6 +4,7 @@ import {
   Image,
   useWindowDimensions,
   Pressable,
+  FlatList,
 } from "react-native";
 import theme from "./theme";
 import Text from "./Text";
@@ -13,7 +14,6 @@ import { GET_REPOSITORY } from "../../graphql/getRepository";
 import { buttonStyles } from "./SignIn";
 import * as Linking from "expo-linking";
 import { ReviewItem } from "./ReviewItem";
-import { FlatList } from "react-native-web";
 
 export const styles = StyleSheet.create({
   container: {
@@ -60,11 +60,11 @@ export const RepositoryListItem = (props) => {
   });
   const navigate = useNavigate();
   const displayedItem = singleView ? repository?.repository : listItem;
-  console.log(displayedItem);
+
   return (
     <Pressable
       onPress={() => {
-        navigate(`/repository/${listItem.id}`);
+        singleView ? undefined : navigate(`/repository/${listItem?.id}`);
       }}
     >
       <View style={styles.container}>
@@ -155,6 +155,13 @@ export const RepositoryListItem = (props) => {
           >
             <Text style={{ color: theme.colors.white }}>Open in GitHub</Text>
           </Pressable>
+          <FlatList
+            data={displayedItem?.reviews?.edges ?? []}
+            renderItem={({ item, index }) => (
+              <ReviewItem review={item} key={index} />
+            )}
+            keyExtractor={({ id }) => id}
+          />
         </>
       )}
     </Pressable>

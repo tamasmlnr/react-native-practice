@@ -4,20 +4,25 @@ import {
   Image,
   useWindowDimensions,
   Pressable,
+  ScrollView,
 } from "react-native";
 import Text from "./Text";
 import theme from "./theme";
 
 const styles = StyleSheet.create({
-  circle: {
-    width: 100,
-    height: 100,
-    lineHeight: 100,
-    borderRadius: "50%",
-    fontSize: "50px",
-    color: theme.colors.white,
-    textAlign: "center",
-    background: "#000",
+  circleContainer: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    borderWidth: 2,
+    borderColor: theme.colors.blue,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  numberText: {
+    color: theme.colors.blue,
+    fontSize: 18,
+    fontWeight: "bold",
   },
   container: {
     display: "flex",
@@ -25,15 +30,23 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.white,
     padding: 8,
   },
+  containerColumn: {
+    display: "flex",
+    flexDirection: "column",
+    paddingLeft: 8,
+    rowGap: 8,
+    columnGap: 20,
+  },
 });
 
 export const ReviewItem = (props) => {
   const { review } = props;
+  const shownItem = review?.node;
 
   return (
-    <View style={styles.container}>
-      <View style={styles.circle}>
-        <Text>{review.rating}</Text>
+    <ScrollView style={styles.container}>
+      <View style={styles.circleContainer}>
+        <Text style={styles.numberText}>{shownItem?.rating}</Text>
       </View>
       <View
         style={[
@@ -42,9 +55,19 @@ export const ReviewItem = (props) => {
         ]}
       >
         <Text fontSize={"title"} fontWeight="bold">
-          {review?.user.username}
+          {shownItem?.user?.username}
+        </Text>
+        <Text fontSize={"subheading"} fontWeight="bold">
+          {new Date(shownItem?.createdAt).toLocaleDateString("en-GB", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+          })}
+        </Text>
+        <Text fontSize={"body"} fontWeight="bold">
+          {shownItem?.text}
         </Text>
       </View>
-    </View>
+    </ScrollView>
   );
 };
