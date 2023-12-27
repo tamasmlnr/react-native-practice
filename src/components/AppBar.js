@@ -56,6 +56,12 @@ const AppBar = () => {
             <Text style={styles.tabText}>Repositories</Text>
           </Link>
         </Pressable>
+
+        <Pressable>
+          <Link to="/review">
+            <Text style={styles.tabText}>Write review</Text>
+          </Link>
+        </Pressable>
       </ScrollView>
     </View>
   );

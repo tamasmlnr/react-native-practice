@@ -8,6 +8,7 @@ import { ApolloClient, useMutation } from "@apollo/client";
 import { LOGIN } from "../../graphql/queryLogin";
 import useAuthStorage from "../../hooks/useAuthStorage";
 import { useNavigate } from "react-router-native";
+import reviewValidationSchema from "./validation/reviewValidationSchema";
 
 export const buttonStyles = StyleSheet.create({
   submitButton: {
@@ -22,42 +23,41 @@ export const buttonStyles = StyleSheet.create({
   },
 });
 
-const SignIn = () => {
+const CreateReview = () => {
   const [mutate, { data }] = useMutation(LOGIN);
   const authStorage = useAuthStorage();
   const navigate = useNavigate();
+
   return (
     <Formik
-      validationSchema={validationSchema}
-      initialValues={{ username: "", password: "" }}
+      validationSchema={reviewValidationSchema}
+      initialValues={{
+        repoOwner: "",
+        repoName: "",
+        rating: 0,
+        review: "",
+      }}
       onSubmit={async (values) => {
-        try {
-          const mutationResponse = await mutate({
-            variables: {
-              credentials: {
-                username: values.username,
-                password: values.password,
-              },
-            },
-          });
-          await authStorage.removeAccessToken();
-          await authStorage.setAccessToken(
-            mutationResponse.data.authenticate.accessToken
-          );
-          navigate("/");
-        } catch (e) {
-          console.log(e);
-        }
+        console.log(values);
       }}
     >
       {({ handleSubmit }) => (
         <View>
-          <FormikTextInput name={"username"} placeholder="Username" />
           <FormikTextInput
-            name={"password"}
-            placeholder="Password"
-            secureTextEntry
+            name={"repoOwner"}
+            placeholder="Repository owner name"
           />
+          <FormikTextInput
+            name={"repoName"}
+            placeholder="Repository owner name"
+          />
+          <FormikTextInput
+            name={"rating"}
+            placeholder="Rating"
+            keyboardType="numeric"
+            inputMode="numeric"
+          />
+          <FormikTextInput name={"review"} placeholder="Review" />
           <Pressable onPress={handleSubmit} style={buttonStyles.submitButton}>
             <Text
               style={{
@@ -65,7 +65,7 @@ const SignIn = () => {
                 fontSize: 20,
               }}
             >
-              Log in
+              Submit review
             </Text>
           </Pressable>
         </View>
@@ -74,4 +74,4 @@ const SignIn = () => {
   );
 };
 
-export default SignIn;
+export default CreateReview;

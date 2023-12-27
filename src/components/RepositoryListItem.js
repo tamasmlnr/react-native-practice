@@ -159,9 +159,8 @@ export const RepositoryListItem = (props) => {
           <FlatList
             data={displayedItem?.reviews?.edges ?? []}
             renderItem={({ item, index }) => (
-              <ReviewItem review={item} key={item.id} />
+              <ReviewItem review={item} key={String(index)} />
             )}
-            keyExtractor={({ id }) => id}
           />
         </>
       )}
