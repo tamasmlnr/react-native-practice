@@ -13,7 +13,7 @@ const RoutesList = () => {
         element={<RepositoryListItem singleView />}
       />
       <Route path="/login" element={<SignIn />} />
-      <Route path="/review" element={<CreateReview />} />
+      <Route path="/review/:userName?/:repoName?" element={<CreateReview />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );

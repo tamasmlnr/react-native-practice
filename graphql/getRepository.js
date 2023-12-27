@@ -11,6 +11,8 @@ export const GET_REPOSITORY = gql`
       stargazersCount
       ratingAverage
       reviewCount
+      name
+      ownerName
       ownerAvatarUrl
       url
       reviews {

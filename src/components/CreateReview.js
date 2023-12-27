@@ -7,8 +7,10 @@ import validationSchema from "./validation/loginValidationSchema";
 import { ApolloClient, useMutation } from "@apollo/client";
 import { LOGIN } from "../../graphql/queryLogin";
 import useAuthStorage from "../../hooks/useAuthStorage";
-import { useNavigate } from "react-router-native";
+import { useNavigate, useParams } from "react-router-native";
 import reviewValidationSchema from "./validation/reviewValidationSchema";
+import { CREATE_REVIEW } from "../../graphql/createComment";
+import { validateSDL } from "graphql/validation/validate";
 
 export const buttonStyles = StyleSheet.create({
   submitButton: {
@@ -24,7 +26,8 @@ export const buttonStyles = StyleSheet.create({
 });
 
 const CreateReview = () => {
-  const [mutate, { data }] = useMutation(LOGIN);
+  const [mutate, { data }] = useMutation(CREATE_REVIEW);
+  const { userName, repoName } = useParams();
   const authStorage = useAuthStorage();
   const navigate = useNavigate();
 
@@ -32,22 +35,38 @@ const CreateReview = () => {
     <Formik
       validationSchema={reviewValidationSchema}
       initialValues={{
-        repoOwner: "",
-        repoName: "",
+        repoOwner: userName ?? "",
+        repoName: repoName ?? "",
         rating: 0,
         review: "",
       }}
       onSubmit={async (values) => {
-        console.log(values);
+        try {
+          const mutationResponse = await mutate({
+            variables: {
+              review: {
+                ownerName: values.repoOwner,
+                rating: parseInt(values.rating),
+                repositoryName: values.repoName,
+                text: values.review,
+              },
+            },
+          });
+          navigate(`/repository/${mutationResponse.data.repositoryId}`);
+        } catch (e) {
+          console.log(e);
+        }
       }}
     >
       {({ handleSubmit }) => (
         <View>
           <FormikTextInput
+            editable={!userName}
             name={"repoOwner"}
             placeholder="Repository owner name"
           />
           <FormikTextInput
+            editable={!repoName}
             name={"repoName"}
             placeholder="Repository owner name"
           />

@@ -156,6 +156,18 @@ export const RepositoryListItem = (props) => {
           >
             <Text style={{ color: theme.colors.white }}>Open in GitHub</Text>
           </Pressable>
+
+          <Pressable
+            style={buttonStyles.submitButton}
+            onPress={() =>
+              navigate(
+                `/review/${displayedItem.ownerName}/${displayedItem.name}`
+              )
+            }
+          >
+            <Text style={{ color: theme.colors.white }}>Write review</Text>
+          </Pressable>
+
           <FlatList
             data={displayedItem?.reviews?.edges ?? []}
             renderItem={({ item, index }) => (
