@@ -44,7 +44,10 @@ export const ReviewItem = (props) => {
   const shownItem = review?.node;
 
   return (
-    <ScrollView style={styles.container}>
+    <View
+      style={[styles.container, { width: useWindowDimensions().width }]}
+      key={review.id}
+    >
       <View style={styles.circleContainer}>
         <Text style={styles.numberText}>{shownItem?.rating}</Text>
       </View>
@@ -68,6 +71,6 @@ export const ReviewItem = (props) => {
           {shownItem?.text}
         </Text>
       </View>
-    </ScrollView>
+    </View>
   );
 };

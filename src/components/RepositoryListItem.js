@@ -62,91 +62,92 @@ export const RepositoryListItem = (props) => {
   const displayedItem = singleView ? repository?.repository : listItem;
 
   return (
-    <Pressable
-      onPress={() => {
-        singleView ? undefined : navigate(`/repository/${listItem?.id}`);
-      }}
-    >
-      <View style={styles.container}>
-        <Image
-          source={{ uri: displayedItem?.ownerAvatarUrl }}
-          style={styles.avatarImg}
-        />
+    <>
+      <Pressable
+        onPress={() => {
+          singleView ? undefined : navigate(`/repository/${listItem?.id}`);
+        }}
+      >
+        <View style={styles.container}>
+          <Image
+            source={{ uri: displayedItem?.ownerAvatarUrl }}
+            style={styles.avatarImg}
+          />
+          <View
+            style={[
+              styles.containerColumn,
+              { width: useWindowDimensions().width - 50 },
+            ]}
+          >
+            <Text fontSize={"title"} fontWeight="bold">
+              {displayedItem?.fullName}
+            </Text>
+            <Text fontSize={"subheading"}>{displayedItem?.description}</Text>
+            <View style={styles.descriptionItem}>
+              <Text style={styles.descriptionItemText}>
+                {displayedItem?.language}
+              </Text>
+            </View>
+          </View>
+        </View>
+
         <View
           style={[
-            styles.containerColumn,
-            { width: useWindowDimensions().width - 50 },
+            styles.container,
+            ,
+            { flexWrap: "wrap", justifyContent: "space-evenly" },
           ]}
         >
-          <Text fontSize={"title"} fontWeight="bold">
-            {displayedItem?.fullName}
-          </Text>
-          <Text fontSize={"subheading"}>{displayedItem?.description}</Text>
-          <View style={styles.descriptionItem}>
-            <Text style={styles.descriptionItemText}>
-              {displayedItem?.language}
+          <View>
+            <Text
+              fontWeight="bold"
+              fontSize={"subheading"}
+              style={styles.centeredText}
+            >
+              {displayedItem?.stargazersCount}
+            </Text>
+            <Text style={styles.centeredText} fontSize={"subheading"}>
+              Stars
+            </Text>
+          </View>
+          <View>
+            <Text
+              fontWeight="bold"
+              fontSize={"subheading"}
+              style={styles.centeredText}
+            >
+              {displayedItem?.forksCount}
+            </Text>
+            <Text fontSize={"subheading"} style={styles.centeredText}>
+              Forks
+            </Text>
+          </View>
+          <View>
+            <Text
+              fontSize={"subheading"}
+              fontWeight="bold"
+              style={styles.centeredText}
+            >
+              {displayedItem?.reviewCount}
+            </Text>
+            <Text fontSize={"subheading"} style={styles.centeredText}>
+              Reviews
+            </Text>
+          </View>
+          <View>
+            <Text
+              fontSize={"subheading"}
+              fontWeight="bold"
+              style={styles.centeredText}
+            >
+              {displayedItem?.ratingAverage}
+            </Text>
+            <Text fontSize={"subheading"} style={styles.centeredText}>
+              Rating
             </Text>
           </View>
         </View>
-      </View>
-
-      <View
-        style={[
-          styles.container,
-          ,
-          { flexWrap: "wrap", justifyContent: "space-evenly" },
-        ]}
-      >
-        <View>
-          <Text
-            fontWeight="bold"
-            fontSize={"subheading"}
-            style={styles.centeredText}
-          >
-            {displayedItem?.stargazersCount}
-          </Text>
-          <Text style={styles.centeredText} fontSize={"subheading"}>
-            Stars
-          </Text>
-        </View>
-        <View>
-          <Text
-            fontWeight="bold"
-            fontSize={"subheading"}
-            style={styles.centeredText}
-          >
-            {displayedItem?.forksCount}
-          </Text>
-          <Text fontSize={"subheading"} style={styles.centeredText}>
-            Forks
-          </Text>
-        </View>
-        <View>
-          <Text
-            fontSize={"subheading"}
-            fontWeight="bold"
-            style={styles.centeredText}
-          >
-            {displayedItem?.reviewCount}
-          </Text>
-          <Text fontSize={"subheading"} style={styles.centeredText}>
-            Reviews
-          </Text>
-        </View>
-        <View>
-          <Text
-            fontSize={"subheading"}
-            fontWeight="bold"
-            style={styles.centeredText}
-          >
-            {displayedItem?.ratingAverage}
-          </Text>
-          <Text fontSize={"subheading"} style={styles.centeredText}>
-            Rating
-          </Text>
-        </View>
-      </View>
-
+      </Pressable>
       {singleView && (
         <>
           <Pressable
@@ -158,12 +159,12 @@ export const RepositoryListItem = (props) => {
           <FlatList
             data={displayedItem?.reviews?.edges ?? []}
             renderItem={({ item, index }) => (
-              <ReviewItem review={item} key={index} />
+              <ReviewItem review={item} key={item.id} />
             )}
             keyExtractor={({ id }) => id}
           />
         </>
       )}
-    </Pressable>
+    </>
   );
 };
